@@ -1,10 +1,13 @@
 import newspaper
 from newspaper import Article
 from newspaper import news_pool
+import os
+import pathlib
+import hashlib
+import random
 
-
-debugMode = False
-memoize = True
+debugMode = True
+memoize = False
 
 def log(msg):
     print(msg)
@@ -13,34 +16,54 @@ def debug(msg):
     if(debugMode):
         print(msg)
 
-# tuple (site, set(exclusion list))
-real_news = [#"http://cnn.com",
-# "http://reuters.com",
-# "https://www.bbc.com",
-# "https://www.npr.org",
-# "https://www.nytimes.com",
-# "https://www.wsj.com",
-# "https://www.washingtonpost.com",
-# "https://www.economist.com",
- "https://www.ap.org",
-# "https://www.theatlantic.com",
-# "https://gizmodo.com/",
-# "https://www.wired.com/",
-# "https://www.nature.com/",
-# "https://www.vox.com/",
+news_sites = [#"http://cnn.com",
+    # Real news
+    "http://reuters.com",
+    "https://www.bbc.com",
+    "https://www.npr.org",
+    "https://www.nytimes.com",
+    "https://www.wsj.com",
+    "https://www.washingtonpost.com",
+    "https://www.economist.com",
+    "https://www.ap.org",
+    "https://www.theatlantic.com",
+    "https://gizmodo.com/",
+    "https://www.wired.com/",
+    "https://www.nature.com/",
+    "https://www.vox.com/",
 
-  # Returns 0 Articles
-  #"https://www.forbes.com",
-  #"https://www.bloomberg.com",
+    # Returns 0 Articles
+    #"https://www.forbes.com",
+    #"https://www.bloomberg.com",
+
+    # Fake news
+    "https://www.breitbart.com",
+    "https://www.infowars.com",
+    "https://www.foxnews.com"
  ]
-
-fake_news = ["https://www.breitbart.com",
-"https://www.infowars.com",
-"https://www.foxnews.com"
-]
 
 exclusion_set = set(["cnnespanol.cnn.com","arabic.cnn.com" "br.reuters.com","fr.reuters.com","es.reuters.com", "it.reuters.com","cn.reuters.com","reuters.zendesk.com","ru.reuters.com","ara.reuters.com","de.reuters.com","ar.reuters.com","mx.reuters.com","jp.reuters.com",
 "cn.nytimes.com"])
+
+sentimentMap = {
+    "http://cnn.com" : 10,
+    "http://reuters.com" : 10,
+    "https://www.bbc.com" : 10,
+    "https://www.npr.org" : 10,
+    "https://www.nytimes.com" : 7,
+    "https://www.wsj.com" : 10,
+    "https://www.washingtonpost.com" : 7,
+    "https://www.economist.com" : 10,
+    "https://www.ap.org" : 10,
+    "https://www.theatlantic.com" : 10,
+    "https://gizmodo.com/" : 7,
+    "https://www.wired.com/" : 7,
+    "https://www.nature.com/" : 10,
+    "https://www.vox.com/" : 7,
+    "https://www.breitbart.com" : 1,
+    "https://www.infowars.com" : 1,
+    "https://www.foxnews.com" : 3
+}
 
 def getPapers(newspapers, exclusionSet):
     totalArticlesIncluded = 0
@@ -52,6 +75,9 @@ def getPapers(newspapers, exclusionSet):
 def processNewsPaper(paper, exclusionSet):
     targetPaper = newspaper.build(paper, language ='en', memoize_articles=memoize)
 
+    for category in targetPaper.category_urls():
+        debug(category)
+
     articlesForPaperIncluded = 0
     for article in targetPaper.articles:
         # check if in exclusion list
@@ -61,7 +87,7 @@ def processNewsPaper(paper, exclusionSet):
             debug("excluding: "+article.url)
         else:
             log(article.url)
-            downloadArticle(article.url)
+            downloadArticle(article.url, paper)
             articlesForPaperIncluded=articlesForPaperIncluded+1
 
     log("---------------------------")
@@ -72,30 +98,54 @@ def processNewsPaper(paper, exclusionSet):
 
     return articlesForPaperIncluded
 
-def downloadArticle(url):
+def getSentiment(paper):
+    sentiment = sentimentMap[paper]
+    log("{paper}:{sentiment} =  " + paper + ":" + str(sentiment))
+    return sentiment
+
+def downloadArticle(url, paper):
     article = Article(url)
     article.download()
     article.parse()
-    log(article.text)
-    #writeTextToFile(article.text)
+    debug(article.text)
+
+    # filename = /{dataDir}/{trainOrDevOrTest}/{textHash}_{sentiment}
+    textHash = hashlib.sha1(article.text.encode()).hexdigest()
+
+    rand = random.randint(1,101)
+    if(rand == 1):
+        trainOrDevOrTest = "dev/"
+    elif(rand==2):
+        trainOrDevOrTest = "test/"
+    else:
+        trainOrDevOrTest="train/"
+
+    sentiment = getSentiment(paper)
+    if(sentiment>5):
+        posOrNeg = "pos/"
+    else:
+        posOrNeg = "neg/"
+
+    fileName = DATA_DIR+trainOrDevOrTest+posOrNeg+str(textHash)+"_"+str(sentiment)
+
+    log("downloading to: "+fileName)
+    writeTextToFile(article.text, fileName)
 
 def writeTextToFile(text, fileName):
     f = open(fileName, "a")
     f.write(text)
     f.close()
 
-#getPapers(real_news, exclusion_set)
-getPapers(fake_news, exclusion_set)
+DATA_DIR = "./data/"
 
-# examples
-#cnn_paper = newspaper.build('http://cnn.com', language='es', memoize_articles=False)
+def setupDataDirs():
+    pathlib.Path(DATA_DIR+"train/"+"pos/").mkdir(parents=True, exist_ok=True)
+    pathlib.Path(DATA_DIR+"train/"+"neg/").mkdir(parents=True, exist_ok=True)
+    pathlib.Path(DATA_DIR+"dev/"+"pos/").mkdir(parents=True, exist_ok=True)
+    pathlib.Path(DATA_DIR+"dev/"+"neg/").mkdir(parents=True, exist_ok=True)
+    pathlib.Path(DATA_DIR+"test/"+"pos/").mkdir(parents=True, exist_ok=True)
+    pathlib.Path(DATA_DIR+"test/"+"neg/").mkdir(parents=True, exist_ok=True)
 
-#print("paperSize"+str(cnn_paper.size))
+setupDataDirs()
 
-#for article in cnn_paper.articles:
-#    print(article.url)
-
-#print("###############")
-
-#for category in cnn_paper.category_urls():
-#     print(category)
+getPapers(news_sites, exclusion_set)
