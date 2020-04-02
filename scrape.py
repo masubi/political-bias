@@ -6,8 +6,8 @@ import pathlib
 import hashlib
 import random
 
-debugMode = True
-memoize = False
+debugMode = False
+memoize = True
 
 def log(msg):
     print(msg)
@@ -84,11 +84,9 @@ def processNewsPaper(paper, exclusionSet):
         checkDomainName = article.url.split("/")[2]
         debug("check exclusion_set: "+ checkDomainName)
         if(checkDomainName in exclusionSet):
-            debug("excluding: "+article.url)
+            log("excluding: "+article.url)
         else:
-            log(article.url)
-            downloadArticle(article.url, paper)
-            articlesForPaperIncluded=articlesForPaperIncluded+1
+            articlesForPaperIncluded=articlesForPaperIncluded+downloadArticle(article.url, paper)
 
     log("---------------------------")
     log("paper: " + paper)
@@ -104,32 +102,43 @@ def getSentiment(paper):
     return sentiment
 
 def downloadArticle(url, paper):
+    log("-------------------------------------")
+    log("attempting downloading:" + url)
     article = Article(url)
-    article.download()
-    article.parse()
-    debug(article.text)
+    try:
+        article.download()
+        article.parse()
+        debug(article.text)
+        if(len(article.text)<100):
+            log("article too short")
+            return 0
 
-    # filename = /{dataDir}/{trainOrDevOrTest}/{textHash}_{sentiment}
-    textHash = hashlib.sha1(article.text.encode()).hexdigest()
+        # filename = /{dataDir}/{trainOrDevOrTest}/{textHash}_{sentiment}
+        textHash = hashlib.sha1(article.text.encode()).hexdigest()
 
-    rand = random.randint(1,101)
-    if(rand == 1):
-        trainOrDevOrTest = "dev/"
-    elif(rand==2):
-        trainOrDevOrTest = "test/"
-    else:
-        trainOrDevOrTest="train/"
+        rand = random.randint(1,101)
+        if(rand == 1):
+            trainOrDevOrTest = "dev/"
+        elif(rand==2):
+            trainOrDevOrTest = "test/"
+        else:
+            trainOrDevOrTest="train/"
 
-    sentiment = getSentiment(paper)
-    if(sentiment>5):
-        posOrNeg = "pos/"
-    else:
-        posOrNeg = "neg/"
+        sentiment = getSentiment(paper)
+        if(sentiment>5):
+            posOrNeg = "pos/"
+        else:
+            posOrNeg = "neg/"
 
-    fileName = DATA_DIR+trainOrDevOrTest+posOrNeg+str(textHash)+"_"+str(sentiment)
+        fileName = DATA_DIR+trainOrDevOrTest+posOrNeg+str(textHash)+"_"+str(sentiment)
 
-    log("downloading to: "+fileName)
-    writeTextToFile(article.text, fileName)
+        log("downloading to: "+fileName)
+        writeTextToFile(article.text, fileName)
+        return 1
+    except:
+        log("failed to download: "+url)
+        return 0
+
 
 def writeTextToFile(text, fileName):
     f = open(fileName, "a")
