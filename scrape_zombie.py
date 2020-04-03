@@ -7,8 +7,9 @@ import hashlib
 import random
 import codecs
 
-debugMode = False
-memoize = False
+debugMode = True
+memoize = True
+DATA_DIR = "./data_zombie/"
 
 def log(msg):
     print(msg)
@@ -17,56 +18,24 @@ def debug(msg):
     if(debugMode):
         print(msg)
 
-real_news = [
-    #"http://cnn.com",
-    "http://reuters.com",
-    "https://www.bbc.com",
-    "https://www.npr.org",
-    "https://www.nytimes.com",
-    "https://www.wsj.com",
-    "https://www.washingtonpost.com",
-    "https://www.economist.com",
-    "https://www.ap.org",
-    "https://www.theatlantic.com",
-    "https://gizmodo.com/",
-    "https://www.wired.com/",
-    "https://www.nature.com/",
-    "https://www.vox.com/",
-    # Returns 0 Articles
-    "https://www.forbes.com",
-    "https://www.bloomberg.com",
-]
-
-fake_news = [
-    "https://www.breitbart.com",
-    "https://www.infowars.com",
-    "https://www.foxnews.com"
-]
-
-all_news = real_news + fake_news
+# parse zombie list to memory
+# https://github.com/MassMove/AttackVectors/blob/master/LocalJournals/fake-local-journals-list.txt
+def parseZombieSitesList():
+    f = open("zombie_sites.txt","r")
+    if f.mode == 'r':
+        flines = f.readlines()
+        aggList = []
+        for line in flines:
+            site = ("https://" + line).rstrip()
+            aggList.append(site)
+            debug("added to memory: " + site)
+    f.close()
+    return aggList
 
 exclusion_set = set(["cnnespanol.cnn.com","arabic.cnn.com" "br.reuters.com","fr.reuters.com","es.reuters.com", "it.reuters.com","cn.reuters.com","reuters.zendesk.com","ru.reuters.com","ara.reuters.com","de.reuters.com","ar.reuters.com","mx.reuters.com","jp.reuters.com",
 "cn.nytimes.com"])
 
-sentimentMap = {
-    "http://cnn.com" : 10,
-    "http://reuters.com" : 10,
-    "https://www.bbc.com" : 10,
-    "https://www.npr.org" : 10,
-    "https://www.nytimes.com" : 7,
-    "https://www.wsj.com" : 10,
-    "https://www.washingtonpost.com" : 7,
-    "https://www.economist.com" : 10,
-    "https://www.ap.org" : 10,
-    "https://www.theatlantic.com" : 10,
-    "https://gizmodo.com/" : 7,
-    "https://www.wired.com/" : 7,
-    "https://www.nature.com/" : 10,
-    "https://www.vox.com/" : 7,
-    "https://www.breitbart.com" : 1,
-    "https://www.infowars.com" : 1,
-    "https://www.foxnews.com" : 3
-}
+all_news = parseZombieSitesList()
 
 def getPapers(newspapers, exclusionSet):
     totalArticlesIncluded = 0
@@ -100,7 +69,7 @@ def processNewsPaper(paper, exclusionSet):
     return articlesForPaperIncluded
 
 def getSentiment(paper):
-    sentiment = sentimentMap[paper]
+    sentiment = 1
     log("{paper}:{sentiment} =  " + paper + ":" + str(sentiment))
     return sentiment
 
@@ -148,8 +117,6 @@ def writeTextToFile(text, fileName):
     f.write(text)
     f.close()
 
-DATA_DIR = "./data/"
-
 def setupDataDirs():
     pathlib.Path(DATA_DIR+"train/"+"pos/").mkdir(parents=True, exist_ok=True)
     pathlib.Path(DATA_DIR+"train/"+"neg/").mkdir(parents=True, exist_ok=True)
@@ -158,6 +125,6 @@ def setupDataDirs():
     pathlib.Path(DATA_DIR+"test/"+"pos/").mkdir(parents=True, exist_ok=True)
     pathlib.Path(DATA_DIR+"test/"+"neg/").mkdir(parents=True, exist_ok=True)
 
-setupDataDirs()
-
-getPapers(all_news, exclusion_set)
+if __name__ == "__main__":
+    setupDataDirs()
+    getPapers(all_news, exclusion_set)
