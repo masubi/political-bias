@@ -8,7 +8,7 @@ import random
 import codecs
 
 debugMode = False
-memoize = False
+memoize = True
 
 def log(msg):
     print(msg)
