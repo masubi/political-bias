@@ -33,15 +33,21 @@ real_news = [
     "https://www.nature.com/",
     "https://www.vox.com/",
     "https://www.theguardian.com/",
-    # Returns 0 Articles
+    "https://www.kiro7.com/",
+    "https://www.staradvertiser.com/",
+    "https://www.independent.co.uk/",
+
+    # Returns 0 articles
     "https://www.forbes.com",
     "https://www.bloomberg.com",
+
 ]
 
 fake_news = [
     "https://www.breitbart.com",
     "https://www.infowars.com",
     "https://www.foxnews.com"
+    # Returns 0 articles
     "https://mynorthwest.com/"
 ]
 
@@ -65,6 +71,10 @@ sentimentMap = {
     "https://www.wired.com/" : 7,
     "https://www.nature.com/" : 10,
     "https://www.vox.com/" : 7,
+    "https://www.kiro7.com/" : 7,
+    "https://www.staradvertiser.com/" : 6,
+    "https://www.independent.co.uk/" : 6,
+
     "https://www.theguardian.com/" : 9,
     "https://www.breitbart.com" : 1,
     "https://www.infowars.com" : 1,
