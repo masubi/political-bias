@@ -6,6 +6,7 @@ DEV = DATA_DIR+"dev/"
 TEST = DATA_DIR+"test/"
 
 def loadDirNamesToMemory(dataDir):
+    print("loading files from: "+dataDir)
     posDir = dataDir + "pos/"
     negDir = dataDir + "neg/"
 
@@ -33,44 +34,43 @@ def deleteFile(filePath):
         os.remove(filePath)
         print("rm file: "+file_path)
     except:
-        print("Failed to remove: " + filePath)
+        print("maybe error removing: " + filePath)
 
 testFiles = loadDirNamesToMemory(TEST)
 devFiles = loadDirNamesToMemory(DEV)
 trainFiles = loadDirNamesToMemory(TRAIN)
 
-# make sure no dupes in TRAIN in TEST and DEV
+# make sure no duplicateFiles in TRAIN in (TEST and DEV)
+print("checking and removing duplicate files in TRAIN from TEST and DEV")
 dupCount = 0
 while (len(trainFiles) != 0):
-    fileToCheck = trainFiles.pop()
+    trainFileToCheck = trainFiles.pop()
 
-    if(fileToCheck in devFiles):
-        print("dupe found and removing from TEST & DEV!!!")
-        deleteFile(DEV+"/neg/"+fileToCheck)
-        deleteFile(DEV+"/pos/"+fileToCheck)
-        deleteFile(DEV+"/neg/"+fileToCheck)
-        deleteFile(DEV+"/pos/"+fileToCheck)
+    if(trainFileToCheck in devFiles):
+        print("dupe found in DEV and removing from TEST & DEV!!!")
+        deleteFile(DEV+"/neg/"+trainFileToCheck)
+        deleteFile(DEV+"/pos/"+trainFileToCheck)
+        deleteFile(TEST+"/neg/"+trainFileToCheck)
+        deleteFile(TEST+"/pos/"+trainFileToCheck)
         dupCount = dupCount+1
 
-    if(fileToCheck in testFiles):
+    if(trainFileToCheck in testFiles):
         print("duplicate found and removing DEV & TEST!!!")
-        deleteFile(DEV+"/neg/"+fileToCheck)
-        deleteFile(DEV+"/pos/"+fileToCheck)
-        deleteFile(TEST+"/neg/"+fileToCheck)
-        deleteFile(TEST+"/pos/"+fileToCheck)
+        deleteFile(DEV+"/neg/"+trainFileToCheck)
+        deleteFile(DEV+"/pos/"+trainFileToCheck)
+        deleteFile(TEST+"/neg/"+trainFileToCheck)
+        deleteFile(TEST+"/pos/"+trainFileToCheck)
         dupCount = dupCount+1
+print("  duplicates found: "+str(dupCount))
 
-# make sure no dupes in DEV and TEST
-dupes = 0
+# make sure no duplicateFiles in DEV and TEST
+print("checking and removing duplicate files between dev and test")
+duplicateFiles = 0
 while (len(devFiles) != 0):
-    fileToCheck = devFiles.pop()
-    if(fileToCheck in testFiles):
+    devFileToCheck = devFiles.pop()
+    if(devFileToCheck in testFiles):
         print("duplicate found")
-        deleteFile(TEST+"pos/"+fileToCheck)
-        deleteFile(TEST+"neg/"+fileToCheck)
-        dupes = dupes + 1
-print("duplicate found: "+str(dupes))
-
-
-
-print("dupes found: " + str(dupCount))
+        deleteFile(TEST+"pos/"+devFileToCheck)
+        deleteFile(TEST+"neg/"+devFileToCheck)
+        duplicateFiles = duplicateFiles + 1
+print("  duplicate found: "+str(duplicateFiles))

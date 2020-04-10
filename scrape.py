@@ -44,9 +44,11 @@ real_news = [
 ]
 
 fake_news = [
+    "https://www.oann.com/"
     "https://www.breitbart.com",
     "https://www.infowars.com",
-    "https://www.foxnews.com"
+    "https://www.foxnews.com",
+
     # Returns 0 articles
     "https://mynorthwest.com/"
 ]
