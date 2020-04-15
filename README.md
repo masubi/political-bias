@@ -3,8 +3,19 @@
 
 fakenews detection
 
-
 ## Data
+
+### Scraping News Sites
+
+Scrape both known sites and zombie sites from mass move
+
+./src/data/scape.py   <- scrape from known Sites
+./src/data/scrape_zombie.py <- scrape zombie sites from mass move
+./src/data/zombie_sites <- zombie sites from mass move
+
+## Setup dev env
+
+Reccomend using conda
 
 ### Setting up newspaper3k https://newspaper.readthedocs.io/en/latest/
 
@@ -13,8 +24,8 @@ fakenews detection
 * pip3 install newspaper3k
 
 
-
-Project Organization
+## Project Organization
+see https://github.com/drivendata/cookiecutter-data-science for details
 ------------
 
     ├── LICENSE
