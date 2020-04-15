@@ -1,6 +1,7 @@
 import os
 import codecs
 import re
+import pathlib
 
 RAW_DATA_DIR = "../../data/raw/data_combined/"
 RAW_TRAIN = RAW_DATA_DIR+"train/"
@@ -12,9 +13,10 @@ PROCESSED_TRAIN = PROCESSED_DATA_DIR+"train/"
 PROCESSED_DEV = PROCESSED_DATA_DIR+"dev/"
 PROCESSED_TEST = PROCESSED_DATA_DIR+"test/"
 
-def writeTextToFile(text, fileName):
+def writeTextToFile(text, path, fileName):
     try:
-        f = codecs.open(fileName, "w", "utf-8")
+        os.makedirs(path, exist_ok=True)
+        f = codecs.open(path+fileName, "w", "utf-8")
         f.write(text)
         f.close()
     except:
@@ -37,28 +39,28 @@ def rmWhiteSpaceFromFile(filename):
     print("AFTER: " + text)
     return text
 
-def rmWhitespace(raw_dir, processed_dir):
-    print("loading files from: "+raw_dir)
-    posDir = raw_dir + "pos/"
-    negDir = raw_dir + "neg/"
+def rmWhiteSpaceFromFiles(raw_dir, processed_dir):
+    print("processing raw files: "+raw_dir)
+    print("writing to: "+processed_dir)
+    rawPosDir = raw_dir + "pos/"
+    rawNegDir = raw_dir + "neg/"
+    processedPosDir = processed_dir + "pos/"
+    processedNegDir = processed_dir + "neg/"
 
     posCount = 0
-    for file_path in os.listdir(posDir):
-        rmWhiteSpaceFromFile(posDir+file_path)
+    for fileName in os.listdir(rawPosDir):
+        text = rmWhiteSpaceFromFile(rawPosDir+fileName)
+        writeTextToFile(text, processedPosDir, fileName)
         posCount = posCount+1
 
     negCount = 0
-    for file_path in os.listdir(negDir):
-        rmWhiteSpaceFromFile(negDir+file_path)
+    for fileName in os.listdir(rawNegDir):
+        text = rmWhiteSpaceFromFile(rawNegDir+fileName)
+        writeTextToFile(text, processedNegDir, fileName)
         negCount = negCount+1
-
-    #assert(posCount + negCount == len(result))
     print("posCount: " + str(posCount))
     print("negCount: " + str(negCount))
-    #print("result: " + str(len(result)))
 
-    #return result
-
-testFiles = rmWhitespace(RAW_TEST, PROCESSED_TEST)
-#devFiles = rmWhitespace(DEV)
-#trainFiles = rmWhitespace(TRAIN)
+testFiles = rmWhiteSpaceFromFiles(RAW_TEST, PROCESSED_TEST)
+devFiles = rmWhiteSpaceFromFiles(RAW_DEV, PROCESSED_DEV)
+trainFiles = rmWhiteSpaceFromFiles(RAW_TRAIN, PROCESSED_TRAIN)
