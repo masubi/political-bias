@@ -9,7 +9,9 @@ import codecs
 
 debugMode = True
 memoize = True
-DATA_DIR = "./data_zombie/"
+DATA_DIR = "../../data/raw/"
+DOWNLOAD_DIR = DATA_DIR + "data_zombie/"
+
 
 def log(msg):
     print(msg)
@@ -106,7 +108,7 @@ def downloadArticle(url, paper):
     else:
         posOrNeg = "neg/"
 
-    fileName = DATA_DIR+trainOrDevOrTest+posOrNeg+str(textHash)+"_"+str(sentiment)
+    fileName = DOWNLOAD_DIR+trainOrDevOrTest+posOrNeg+str(textHash)+"_"+str(sentiment)
 
     log("downloading to: "+fileName)
     writeTextToFile(article.text, fileName)

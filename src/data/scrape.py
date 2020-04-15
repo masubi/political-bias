@@ -44,7 +44,7 @@ real_news = [
 ]
 
 fake_news = [
-    "https://www.oann.com/"
+    "https://www.oann.com/",
     "https://www.breitbart.com",
     "https://www.infowars.com",
     "https://www.foxnews.com",
@@ -76,12 +76,12 @@ sentimentMap = {
     "https://www.kiro7.com/" : 7,
     "https://www.staradvertiser.com/" : 6,
     "https://www.independent.co.uk/" : 6,
-
     "https://www.theguardian.com/" : 9,
     "https://www.breitbart.com" : 1,
     "https://www.infowars.com" : 1,
     "https://www.foxnews.com" : 3,
-    "https://mynorthwest.com/" : 1
+    "https://mynorthwest.com/" : 1,
+    "https://www.oann.com/" : 2
 }
 
 def getPapers(newspapers, exclusionSet):
@@ -164,7 +164,7 @@ def writeTextToFile(text, fileName):
     f.write(text)
     f.close()
 
-DATA_DIR = "./data/"
+DATA_DIR = "../../data/raw/"
 
 def setupDataDirs():
     pathlib.Path(DATA_DIR+"train/"+"pos/").mkdir(parents=True, exist_ok=True)

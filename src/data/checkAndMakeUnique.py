@@ -1,6 +1,6 @@
 import os
 
-DATA_DIR = "data_combined/"
+DATA_DIR = "../../data/raw/data_combined/"
 TRAIN = DATA_DIR+"train/"
 DEV = DATA_DIR+"dev/"
 TEST = DATA_DIR+"test/"
