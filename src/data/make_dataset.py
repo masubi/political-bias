@@ -3,21 +3,39 @@ import click
 import logging
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
+import shutil
 
 import os
 import codecs
 import re
 import pathlib
+import tarfile
+import os.path
 
-RAW_DATA_DIR = "../../data/raw/data_combined/"
-RAW_TRAIN = RAW_DATA_DIR+"train/"
-RAW_DEV = RAW_DATA_DIR+"dev/"
-RAW_TEST = RAW_DATA_DIR+"test/"
+# raw data dirs
+RAW_DATA_DIR = "../../data/raw/"
+RAW_SCRAPE_DATA_DIR = RAW_DATA_DIR + "data/"
+RAW_ZOMBIE_SCRAPE_DATA_DIR = RAW_DATA_DIR + "data_zombie/"
 
+# processed data dirs
 PROCESSED_DATA_DIR = "../../data/processed/"
-PROCESSED_TRAIN = PROCESSED_DATA_DIR+"train/"
-PROCESSED_DEV = PROCESSED_DATA_DIR+"dev/"
-PROCESSED_TEST = PROCESSED_DATA_DIR+"test/"
+PROCESSED_SCRAPE_DATA_DIR = PROCESSED_DATA_DIR + "data/"
+PROCESSED_ZOMBIE_SCRAPE_DATA_DIR = PROCESSED_DATA_DIR + "data_zombie/"
+
+DATA_COMBINED = "../../data/processed/data_combined/"
+
+def deleteDir(path):
+    try:
+        shutil.rmtree(path)
+    except:
+        print("error deleting "+path)
+
+def deleteFile(filePath):
+    try:
+        os.remove(filePath)
+        print("rm file: "+file_path)
+    except:
+        print("maybe error removing: " + filePath)
 
 def writeTextToFile(text, path, fileName):
     try:
@@ -64,8 +82,39 @@ def rmWhiteSpaceFromFiles(raw_dir, processed_dir):
         text = rmWhiteSpaceFromFile(rawNegDir+fileName)
         writeTextToFile(text, processedNegDir, fileName)
         negCount = negCount+1
-    print("posCount: " + str(posCount))
-    print("negCount: " + str(negCount))
+    print("processed posCount: " + str(posCount))
+    print("processed negCount: " + str(negCount))
+
+def removeWhiteSpaceFromFiles():
+    rmWhiteSpaceFromFiles(RAW_SCRAPE_DATA_DIR, PROCESSED_SCRAPE_DATA_DIR)
+    rmWhiteSpaceFromFiles(RAW_ZOMBIE_SCRAPE_DATA_DIR, PROCESSED_ZOMBIE_SCRAPE_DATA_DIR)
+
+def generateDataCombined():
+    os.makedirs(DATA_COMBINED+"pos/", exist_ok=True)
+    os.makedirs(DATA_COMBINED+"neg/", exist_ok=True)
+
+    def copyAllFiles(src, dest):
+        for fileName in os.listdir(src):
+            try:
+                shutil.copy(src+fileName, dest+fileName)
+            except:
+                print("failed to copy: "+fileName)
+
+    copyAllFiles(PROCESSED_SCRAPE_DATA_DIR+"pos/", DATA_COMBINED+"pos/")
+    copyAllFiles(PROCESSED_SCRAPE_DATA_DIR+"neg/", DATA_COMBINED+"neg/")
+    copyAllFiles(PROCESSED_ZOMBIE_SCRAPE_DATA_DIR+"neg/", DATA_COMBINED+"neg/")
+
+    posFileCount = len([name for name in os.listdir(DATA_COMBINED+"pos/") if os.path.isfile(os.path.join(DATA_COMBINED+"pos/", name))])
+    negFileCount = len([name for name in os.listdir(DATA_COMBINED+"neg/") if os.path.isfile(os.path.join(DATA_COMBINED+"neg/", name))])
+    print("posFileCount: " + str(posFileCount))
+    print("negFileCount: " + str(negFileCount))
+
+    make_tarfile(PROCESSED_DATA_DIR+"data.tar.gz", DATA_COMBINED )
+    print("finished tar")
+
+def make_tarfile(output_filename, source_dir):
+    with tarfile.open(output_filename, "w:gz") as tar:
+        tar.add(source_dir, arcname=os.path.basename(source_dir))
 
 def main():
     """ Runs data processing scripts to turn raw data from (../raw) into
@@ -74,10 +123,16 @@ def main():
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
 
-    testFiles = rmWhiteSpaceFromFiles(RAW_TEST, PROCESSED_TEST)
-    devFiles = rmWhiteSpaceFromFiles(RAW_DEV, PROCESSED_DEV)
-    trainFiles = rmWhiteSpaceFromFiles(RAW_TRAIN, PROCESSED_TRAIN)
+    # clean last run
+    deleteDir(PROCESSED_SCRAPE_DATA_DIR)
+    deleteDir(PROCESSED_ZOMBIE_SCRAPE_DATA_DIR)
+    deleteDir(DATA_COMBINED)
+    deleteDir(PROCESSED_DATA_DIR+"data.tar.gz")
 
+    # remove whitespace
+    removeWhiteSpaceFromFiles()
+
+    generateDataCombined()
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'

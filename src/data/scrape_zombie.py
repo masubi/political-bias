@@ -90,17 +90,8 @@ def downloadArticle(url, paper):
     if(len(article.text)<1000):
         log("article too short")
         return 0
-
-    # filename = /{dataDir}/{trainOrDevOrTest}/{textHash}_{sentiment}
+    # filename = /{dataDir}/{textHash}_{sentiment}
     textHash = hashlib.sha1(article.text.encode()).hexdigest()
-
-    rand = random.randint(1,101)
-    if(rand == 1):
-        trainOrDevOrTest = "dev/"
-    elif(rand==2):
-        trainOrDevOrTest = "test/"
-    else:
-        trainOrDevOrTest="train/"
 
     sentiment = getSentiment(paper)
     if(sentiment>5):
@@ -108,25 +99,21 @@ def downloadArticle(url, paper):
     else:
         posOrNeg = "neg/"
 
-    fileName = DOWNLOAD_DIR+trainOrDevOrTest+posOrNeg+str(textHash)+"_"+str(sentiment)
+    pathName = DOWNLOAD_DIR+posOrNeg
+    fileName = str(textHash)+"_"+str(sentiment)
 
-    log("downloading to: "+fileName)
-    writeTextToFile(article.text, fileName)
+    log("downloading to: "+pathName+fileName)
+    writeTextToFile(article.text, pathName, fileName)
     return 1
 
-def writeTextToFile(text, fileName):
-    f = codecs.open(fileName, "w", "utf-8")
-    f.write(text)
-    f.close()
-
-def setupDataDirs():
-    pathlib.Path(DATA_DIR+"train/"+"pos/").mkdir(parents=True, exist_ok=True)
-    pathlib.Path(DATA_DIR+"train/"+"neg/").mkdir(parents=True, exist_ok=True)
-    pathlib.Path(DATA_DIR+"dev/"+"pos/").mkdir(parents=True, exist_ok=True)
-    pathlib.Path(DATA_DIR+"dev/"+"neg/").mkdir(parents=True, exist_ok=True)
-    pathlib.Path(DATA_DIR+"test/"+"pos/").mkdir(parents=True, exist_ok=True)
-    pathlib.Path(DATA_DIR+"test/"+"neg/").mkdir(parents=True, exist_ok=True)
+def writeTextToFile(text, path, fileName):
+    try:
+        os.makedirs(path, exist_ok=True)
+        f = codecs.open(path+fileName, "w", "utf-8")
+        f.write(text)
+        f.close()
+    except:
+        print("failed to write: "+fileName)
 
 if __name__ == "__main__":
-    setupDataDirs()
     getPapers(all_news, exclusion_set)
