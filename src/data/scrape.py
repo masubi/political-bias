@@ -48,6 +48,8 @@ fake_news = [
     "https://www.breitbart.com",
     "https://www.infowars.com",
     "https://www.foxnews.com",
+    "https://www.theepochtimes.com/"
+
 
     # Returns 0 articles
     "https://mynorthwest.com/"
@@ -81,7 +83,8 @@ sentimentMap = {
     "https://www.infowars.com" : 1,
     "https://www.foxnews.com" : 3,
     "https://mynorthwest.com/" : 1,
-    "https://www.oann.com/" : 2
+    "https://www.oann.com/" : 2,
+    "https://www.theepochtimes.com/": 1
 }
 
 def getPapers(newspapers, exclusionSet):

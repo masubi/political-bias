@@ -13,9 +13,15 @@ Scrape both known sites and zombie sites from mass move
 ./src/data/scrape_zombie.py <- scrape zombie sites from mass move
 ./src/data/zombie_sites <- zombie sites from mass move
 
+Note:  these scripts expect to be run from within ./src/data/
+
+### Creating data set
+
+python3 make_dataset.py
+
 ## Setup dev env
 
-Reccomend using conda
+Recommend using conda
 
 ### Setting up newspaper3k https://newspaper.readthedocs.io/en/latest/
 
