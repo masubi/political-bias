@@ -55,15 +55,29 @@ def readTextFromFile(fileName):
         print("failed to read: " + fileName)
         return ""
 
-def rmWhiteSpaceFromFile(filename):
+
+
+def excludeTokensFromFile(filename):
+
+    excludedTokens = [ "(Reuters)",
+                       "copyright Reuters",
+                       "Reuters Image",
+                       "REUTERS/",
+                       "Vox"
+                        ]
+
     text = readTextFromFile(filename)
-    #print("-----------------------------")
-    #print("BEFORE: " + text)
+    print("-----------------------------")
+    print("BEFORE: " + text)
+
+    for token in excludedTokens:
+        text = re.sub('\stoken\s', '', text)
+
     text = re.sub('[\r\n\t]', '', text)
-    #print("AFTER: " + text)
+    print("AFTER: " + text)
     return text
 
-def rmWhiteSpaceFromFiles(raw_dir, processed_dir):
+def excludeTokensFromFiles(raw_dir, processed_dir):
     print("processing raw files: "+raw_dir)
     print("writing to: "+processed_dir)
     rawPosDir = raw_dir + "pos/"
@@ -73,21 +87,21 @@ def rmWhiteSpaceFromFiles(raw_dir, processed_dir):
 
     posCount = 0
     for fileName in os.listdir(rawPosDir):
-        text = rmWhiteSpaceFromFile(rawPosDir+fileName)
+        text = excludeTokensFromFile(rawPosDir+fileName)
         writeTextToFile(text, processedPosDir, fileName)
         posCount = posCount+1
 
     negCount = 0
     for fileName in os.listdir(rawNegDir):
-        text = rmWhiteSpaceFromFile(rawNegDir+fileName)
+        text = excludeTokensFromFile(rawNegDir+fileName)
         writeTextToFile(text, processedNegDir, fileName)
         negCount = negCount+1
     print("processed posCount: " + str(posCount))
     print("processed negCount: " + str(negCount))
 
-def removeWhiteSpaceFromFiles():
-    rmWhiteSpaceFromFiles(RAW_SCRAPE_DATA_DIR, PROCESSED_SCRAPE_DATA_DIR)
-    rmWhiteSpaceFromFiles(RAW_ZOMBIE_SCRAPE_DATA_DIR, PROCESSED_ZOMBIE_SCRAPE_DATA_DIR)
+def excludeUndesiredTokens():
+    excludeTokensFromFiles(RAW_SCRAPE_DATA_DIR, PROCESSED_SCRAPE_DATA_DIR)
+    excludeTokensFromFiles(RAW_ZOMBIE_SCRAPE_DATA_DIR, PROCESSED_ZOMBIE_SCRAPE_DATA_DIR)
 
 def generateDataCombined():
     os.makedirs(DATA_COMBINED+"pos/", exist_ok=True)
@@ -129,8 +143,8 @@ def main():
     deleteDir(DATA_COMBINED)
     deleteDir(PROCESSED_DATA_DIR+"data.tar.gz")
 
-    # remove whitespace
-    removeWhiteSpaceFromFiles()
+    # processing
+    excludeUndesiredTokens()
 
     generateDataCombined()
 
