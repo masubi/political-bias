@@ -34,9 +34,6 @@ def parseZombieSitesList():
     f.close()
     return aggList
 
-exclusion_set = set(["cnnespanol.cnn.com","arabic.cnn.com" "br.reuters.com","fr.reuters.com","es.reuters.com", "it.reuters.com","cn.reuters.com","reuters.zendesk.com","ru.reuters.com","ara.reuters.com","de.reuters.com","ar.reuters.com","mx.reuters.com","jp.reuters.com",
-"cn.nytimes.com"])
-
 all_news = parseZombieSitesList()
 
 def getPapers(newspapers, exclusionSet):

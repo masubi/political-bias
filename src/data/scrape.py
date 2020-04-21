@@ -36,6 +36,9 @@ real_news = [
     "https://www.kiro7.com/",
     "https://www.staradvertiser.com/",
     "https://www.independent.co.uk/",
+    "https://www.newsweek.com/",
+    "https://www.businessinsider.com/",
+
 
     # Returns 0 articles
     "https://www.forbes.com",
@@ -78,6 +81,9 @@ sentimentMap = {
     "https://www.staradvertiser.com/" : 6,
     "https://www.independent.co.uk/" : 6,
     "https://www.theguardian.com/" : 9,
+    "https://www.newsweek.com/" : 5,
+    "https://www.businessinsider.com/" : 5,
+
     "https://www.breitbart.com" : 1,
     "https://www.infowars.com" : 1,
     "https://www.foxnews.com" : 3,
