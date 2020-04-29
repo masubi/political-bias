@@ -13,16 +13,16 @@ import tarfile
 import os.path
 
 # raw data dirs
-RAW_DATA_DIR = "../../data/raw/"
+RAW_DATA_DIR = "./data/raw/"
 RAW_SCRAPE_DATA_DIR = RAW_DATA_DIR + "data/"
 RAW_ZOMBIE_SCRAPE_DATA_DIR = RAW_DATA_DIR + "data_zombie/"
 
 # processed data dirs
-PROCESSED_DATA_DIR = "../../data/processed/"
+PROCESSED_DATA_DIR = "./data/processed/"
 PROCESSED_SCRAPE_DATA_DIR = PROCESSED_DATA_DIR + "data/"
 PROCESSED_ZOMBIE_SCRAPE_DATA_DIR = PROCESSED_DATA_DIR + "data_zombie/"
 
-DATA_COMBINED = "../../data/processed/data_combined/"
+DATA_COMBINED = "./data/processed/data_combined/"
 
 def deleteDir(path):
     try:
@@ -68,13 +68,14 @@ def excludeTokensFromFile(filename):
 
     text = readTextFromFile(filename)
     print("-----------------------------")
-    print("BEFORE: " + text)
+    print("stripping undesired tokens from: "+filename)
+    #print("BEFORE: " + text)
 
     for token in excludedTokens:
         text = re.sub('\stoken\s', '', text)
 
     text = re.sub('[\r\n\t]', '', text)
-    print("AFTER: " + text)
+    #print("AFTER: " + text)
     return text
 
 def excludeTokensFromFiles(raw_dir, processed_dir):
@@ -103,7 +104,7 @@ def excludeUndesiredTokens():
     excludeTokensFromFiles(RAW_SCRAPE_DATA_DIR, PROCESSED_SCRAPE_DATA_DIR)
     excludeTokensFromFiles(RAW_ZOMBIE_SCRAPE_DATA_DIR, PROCESSED_ZOMBIE_SCRAPE_DATA_DIR)
 
-def generateDataCombined():
+def generateDataCombinedTar():
     os.makedirs(DATA_COMBINED+"pos/", exist_ok=True)
     os.makedirs(DATA_COMBINED+"neg/", exist_ok=True)
 
@@ -123,10 +124,19 @@ def generateDataCombined():
     print("posFileCount: " + str(posFileCount))
     print("negFileCount: " + str(negFileCount))
 
-    make_tarfile(PROCESSED_DATA_DIR+"data.tar.gz", DATA_COMBINED )
+    make_tarfile(PROCESSED_DATA_DIR+"data_combined.tar.gz", DATA_COMBINED.rstrip("/") )
     print("finished tar")
 
+def generateDataTar():
+    make_tarfile(PROCESSED_DATA_DIR+"data.tar.gz", PROCESSED_SCRAPE_DATA_DIR.rstrip("/") )
+
+def generateDataZombieTar():
+    make_tarfile(PROCESSED_DATA_DIR+"data_zombie.tar.gz", PROCESSED_ZOMBIE_SCRAPE_DATA_DIR.rstrip("/"))
+
 def make_tarfile(output_filename, source_dir):
+    print("tar input dir: " + source_dir)
+    print("tar output file: " + output_filename)
+
     with tarfile.open(output_filename, "w:gz") as tar:
         tar.add(source_dir, arcname=os.path.basename(source_dir))
 
@@ -146,7 +156,9 @@ def main():
     # processing
     excludeUndesiredTokens()
 
-    generateDataCombined()
+    generateDataTar()
+    generateDataZombieTar()
+    generateDataCombinedTar()
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'

@@ -17,7 +17,7 @@ Note:  these scripts expect to be run from within ./src/data/
 
 ### Creating data set
 
-python3 make_dataset.py
+make data  // run from project root
 
 ## Setup dev env
 
