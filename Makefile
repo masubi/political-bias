@@ -29,6 +29,13 @@ requirements: test_environment
 data: requirements
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py data/raw data/processed
 
+# Download bert
+#download_bert:
+
+## Train Model on processed
+train:
+	$(PYTHON_INTERPRETER) src/models/train_model.py data/processed/data/
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete

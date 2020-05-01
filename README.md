@@ -9,7 +9,7 @@ fakenews detection
 
 Scrape both known sites and zombie sites from mass move
 
-./src/data/scape.py   <- scrape from known Sites
+./src/data/scrape.py   <- scrape from known Sites
 ./src/data/scrape_zombie.py <- scrape zombie sites from mass move
 ./src/data/zombie_sites <- zombie sites from mass move
 
@@ -19,9 +19,8 @@ Note:  these scripts expect to be run from within ./src/data/
 
 make data  // run from project root
 
-## Setup dev env
+## Additional dev env setup
 
-Recommend using conda
 
 ### Setting up newspaper3k https://newspaper.readthedocs.io/en/latest/
 
