@@ -41,6 +41,9 @@ clean:
 	find . -type f -name "*.py[co]" -delete
 	find . -type d -name "__pycache__" -delete
 
+clean_models:
+	rm -rf models/bert*
+
 ## Lint using flake8
 lint:
 	flake8 src
