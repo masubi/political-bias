@@ -6,6 +6,7 @@ import pathlib
 import hashlib
 import random
 import codecs
+import re
 
 debugMode = False
 memoize = True
@@ -117,8 +118,8 @@ def processNewsPaper(paper, exclusionSet):
 
     log("---------------------------")
     log("paper: " + paper)
-    log("articlesForPaperIncluded: " + str(articlesForPaperIncluded))
-    log("totalPaper articles: " + str(targetPaper.size()))
+    log("total articles for paper: " + str(targetPaper.size()))
+    log("# articles included " + str(articlesForPaperIncluded))
     log("---------------------------")
 
     return articlesForPaperIncluded
@@ -140,8 +141,10 @@ def downloadArticle(url, paper):
         return 0
 
     debug(article.text)
-    if(len(article.text)<1000):
-        log("article too short")
+    text = re.sub('[\r\n\t]', '', article.text)
+    tokens = text.split(" ")
+    if(len(tokens)<50):
+        log("article too short, len="+str(len(tokens)))
         return 0
 
     # filename = /{dataDir}/{textHash}_{sentiment}

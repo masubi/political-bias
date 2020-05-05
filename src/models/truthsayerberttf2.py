@@ -42,6 +42,25 @@ DO_DELETE = True #@param {type:"boolean"}
 USE_BUCKET = True #@param {type:"boolean"}
 BUCKET = 'bert_truthsayer_test1' #@param {type:"string"}
 
+if USE_BUCKET:
+  OUTPUT_DIR = 'gs://{}/{}'.format(BUCKET, OUTPUT_DIR)
+  from google.colab import auth
+  auth.authenticate_user()
+
+if DO_DELETE:
+  try:
+    tf.io.gfile.DeleteRecursively(OUTPUT_DIR)
+  except:
+    print("failed to recursive delete of "+OUTPUT_DIR + ", need to manually delete")
+    # Doesn't matter if the directory didn't exist
+    pass
+tf.io.gfile.makedirs(OUTPUT_DIR)
+print('***** Model output directory: {} *****'.format(OUTPUT_DIR))
+
+"""#Data"""
+
+from google.colab import drive
+drive.mount('/content/gdrive')
 
 from tensorflow import keras
 import os
