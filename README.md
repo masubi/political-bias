@@ -1,7 +1,23 @@
 # Truthsayer
 ==============================
 
-fakenews detection
+## Problem
+
+Detecting real/fake news & assessing degree of political bias is difficult.  This project is an initial attempt at using BERT as a discriminator.  For details see discussion [In Depth](docs/InDepth.md)
+
+# Setup
+
+## Requirements
+* conda
+* pip3
+* python 3.7
+* use pip install -r requirements.txt at project root
+
+### Setting up newspaper3k https://newspaper.readthedocs.io/en/latest/
+
+* brew install libxml2 libxslt
+* brew install libtiff libjpeg webp little-cms2
+* pip3 install newspaper3k
 
 ## Data
 
@@ -19,15 +35,12 @@ Note:  these scripts expect to be run from within ./src/data/
 
 make data  // run from project root
 
-## Additional dev env setup
+## Models
 
+src/models should be run from that directory
 
-### Setting up newspaper3k https://newspaper.readthedocs.io/en/latest/
-
-* brew install libxml2 libxslt
-* brew install libtiff libjpeg webp little-cms2
-* pip3 install newspaper3k
-
+* src/models/train_model.py - trains a bert model
+* src/models/predict_model.py - runs some predictions
 
 ## Project Organization
 see https://github.com/drivendata/cookiecutter-data-science for details
