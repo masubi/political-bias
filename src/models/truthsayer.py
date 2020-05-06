@@ -60,9 +60,6 @@ def download_and_load_datasets(datadir, force_download=False):
   print(df.head())
   return df
 
-
-
-
 """Next, we need to preprocess our data so that it matches the data BERT was trained on. For this, we'll need to do a couple of things (but don't worry--this is also included in the Python library):
 
 

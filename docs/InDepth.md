@@ -17,8 +17,9 @@ Significant work has been done in the area of Sarcasm and Sentiment detection in
 
 BERT[Devlin, 2018] has shown superior results in Sentiment Detection and other NLP tasks.  We use this as a base and train our data and use it to make predictions on data it hasn't seen.
 
-Alot of code was based on the BERT Colabatory [notebook](https://colab.research.google.com/github/tensorflow/tpu/blob/master/tools/colab/bert_finetuning_with_cloud_tpus.ipynb) and [Simple Bert using TensorFlow 2.0](https://towardsdatascience.com/simple-bert-using-tensorflow-2-0-132cb19e9b22)
+A lot of code was based on the BERT Colabatory [notebook](https://colab.research.google.com/github/tensorflow/tpu/blob/master/tools/colab/bert_finetuning_with_cloud_tpus.ipynb) and [Simple Bert using TensorFlow 2.0](https://towardsdatascience.com/simple-bert-using-tensorflow-2-0-132cb19e9b22) and [BERT github repo](https://github.com/google-research/bert)
 
+Keep in mind this is all WIP and proof of concept so there are a lot of rough edges
 
 ## Data Sources
 
