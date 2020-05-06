@@ -5,9 +5,21 @@
 
 Detecting fake/real news is a challenging problem and one w/ particular relevance as propaganda has become prevalent.  We see zombie sites appearing via grassroot projects such as [MassMove](https://github.com/MassMove/AttackVectors).  Additionally, we are challenged by the notion of an objective truth that does not contain a highly polarized political bias.  
 
+## Past work
+
 We have some tools we can use e.g. [academic classes](https://callingbullshit.org) and other apps like [credder](https://credder.com/) and non profits such as [fullfact](https://fullfact.org).  There is past work being done in automating this detection of fake news [Wang 2017, Zellers 2019, Pérez-Rosas 2017].
 
 Significant work has been done in the area of Sarcasm and Sentiment detection in NLP(e.g. [Poria 2016]).  Significantly, we can also detect political bias [Rao 2016].
+
+# Approach
+
+BERT[Devlin, 2018] has shown superior results in Sentiment Detection and other NLP tasks.  We use this as a base and train our data and use it to make predictions on data it hasn't seen.
+
+## Data Sources
+
+Data is available in a variety of places.  We use newspaper3k to scrape sites and manually score the site based on credibility.
+
+# Results
 
 
 # Additional Resources
