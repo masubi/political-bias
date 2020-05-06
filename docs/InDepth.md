@@ -3,7 +3,9 @@
 
 # Problem/Introduction
 
-Detecting fake/real news is a challenging problem and one w/ particular relevance as propaganda has become prevalent.  We see zombie sites appearing via grassroot projects such as [MassMove](https://github.com/MassMove/AttackVectors).  Additionally, we are challenged by the notion of an objective truth that does not contain a highly polarized political bias.  
+Detecting fake/real news is a challenging problem and one w/ particular relevance as propaganda has become prevalent.  We see zombie sites appearing via grassroot projects such as [MassMove](https://github.com/MassMove/AttackVectors).  Additionally, we are challenged by the notion of an objective truth that does not contain a highly polarized political bias.
+
+Further, while the idea of objective truth is attractive it is problematic as objective real world ground truth is difficult to determine.    
 
 ## Past work
 
@@ -15,12 +17,37 @@ Significant work has been done in the area of Sarcasm and Sentiment detection in
 
 BERT[Devlin, 2018] has shown superior results in Sentiment Detection and other NLP tasks.  We use this as a base and train our data and use it to make predictions on data it hasn't seen.
 
+Alot of code was based on the BERT Colabatory [notebook](https://colab.research.google.com/github/tensorflow/tpu/blob/master/tools/colab/bert_finetuning_with_cloud_tpus.ipynb) and [Simple Bert using TensorFlow 2.0](https://towardsdatascience.com/simple-bert-using-tensorflow-2-0-132cb19e9b22)
+
+
 ## Data Sources
 
 Data is available in a variety of places.  We use newspaper3k to scrape sites and manually score the site based on credibility.
 
+* zombie sites
+* regular news sites
+
+## Model Training Runs
+
+Trained several different models w/ different variation
+
+* polarity vs sentiment: using polarity(simply a boolean for whether it was fake news or not) and sentiment which used a numerical value to determine the credibility of news source.  
+* regular sites vs regular sites + zombie sites:  zombie sites are sites from the mass move list.  regular sites are just regular news sites
+* removing extra white spaces for data:  formatting and other tokens may leave signatures as to which news site the source text is from
+* varying the number of tokens:  the number of tokens from the news article data that is used.
+
 # Results
 
+![results](results.png)
+
+A full exploration of the hyper-parameter space is needed to optimized test accuracy.  However, these results show two thing:
+
+1.  A relatively high dev accuracy
+2.  More data increases the accuracy
+
+# Conclusions
+
+The high accuracy lends credibility to the idea that political bias is detectable.
 
 # Additional Resources
 
