@@ -52,13 +52,13 @@ The high accuracy lends credibility to the idea that political bias is detectabl
 
 # Additional Resources
 
-[fake news class](https://callingbullshit.org)
-[how people consume news](http://www.digitalnewsreport.org/survey/2019/how-younger-generations-consume-news-differently/)
-[zombie sites from MassMove](https://github.com/MassMove/AttackVectors)
-[app/site for news credibility](https://credder.com/)
-[fake news dataset](https://github.com/klout/opendata/tree/master/political_leaning)
-[scraping news sites](https://newspaper.readthedocs.io/en/latest/)
-[Discussion of Transformers](https://towardsdatascience.com/transformer-attention-is-all-you-need-1e455701fdd9)
+* [fake news class](https://callingbullshit.org)
+* [how people consume news](http://www.digitalnewsreport.org/survey/2019/how-younger-generations-consume-news-differently/)
+* [zombie sites from MassMove](https://github.com/MassMove/AttackVectors)
+* [app/site for news credibility](https://credder.com/)
+* [fake news dataset](https://github.com/klout/opendata/tree/master/political_leaning)
+* [scraping news sites](https://newspaper.readthedocs.io/en/latest/)
+* [Discussion of Transformers](https://towardsdatascience.com/transformer-attention-is-all-you-need-1e455701fdd9)
 
 # References
 
