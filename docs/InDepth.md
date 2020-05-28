@@ -11,7 +11,7 @@ Further, while the idea of objective truth is attractive it is problematic as ob
 
 We have some tools we can use e.g. [academic classes](https://callingbullshit.org) and other apps like [credder](https://credder.com/) and non profits such as [fullfact](https://fullfact.org).  There is past work being done in automating this detection of fake news [Wang 2017, Zellers 2019, Pérez-Rosas 2017].
 
-Significant work has been done in the area of Sarcasm and Sentiment detection in NLP(e.g. [Poria 2016]).  Significantly, we can also detect political bias [Rao 2016].
+Much work has been done in the area of Sarcasm and Sentiment detection in NLP(e.g. [Poria 2016]).  Significantly, we can also detect political bias [Rao 2016].
 
 # Approach
 
